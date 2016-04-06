@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <delete dir="target/sqoop-1.99.6-bin-hadoop200"/>
+  <delete file="target/sqoop-1.99.6-bin-hadoop200.tar.gz"/>
+  <mkdir dir="target/sqoop-1.99.6-bin-hadoop200"/>
+  <copy todir="target/sqoop-1.99.6-bin-hadoop200" flatten="false" includeEmptyDirs="false">
+    <fileset dir="../">
+      <include name="**/*"/>
+      <exclude name="build/**"/>
+      <exclude name="**/target/**"/>
+      <exclude name=".git/**"/>
+      <exclude name="tags"/>
+      <exclude name="**/.project"/>
+      <exclude name="**/.classpath"/>
+      <exclude name="**/.settings/**"/>
+    </fileset>
+  </copy>
+  <copy todir="target/sqoop-1.99.6-bin-hadoop200/docs" flatten="false" includeEmptyDirs="false">
+    <fileset dir="../docs/target/site">
+      <include name="**/*"/>
+    </fileset>
+  </copy>
+  <get dest="target/apache-tomcat.tar.gz" skipexisting="true" verbose="true" src="http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.37/bin/apache-tomcat-6.0.37.tar.gz"/>
+  <untar dest="target" src="target/apache-tomcat.tar.gz" compression="gzip"/>
+  <move file="target/apache-tomcat-6.0.37" tofile="target/sqoop-1.99.6-bin-hadoop200/server"/>
+  <copy todir="target/sqoop-1.99.6-bin-hadoop200/server/bin">
+    <fileset dir="src/main/server/bin"/>
+  </copy>
+  <chmod dir="target/sqoop-1.99.6-bin-hadoop200/server/bin" perm="u+x" includes="**/*.sh"/>
+  <copy todir="target/sqoop-1.99.6-bin-hadoop200/server/conf">
+    <fileset dir="src/main/server/conf"/>
+  </copy>
+  <delete dir="target/sqoop-1.99.6-bin-hadoop200/server/webapps"/>
+  <mkdir dir="target/sqoop-1.99.6-bin-hadoop200/server/webapps"/>
+  <copy todir="target/sqoop-1.99.6-bin-hadoop200/server/webapps">
+    <fileset dir="src/main/server/webapps"/>
+  </copy>
+  <copy file="../server/target/sqoop.war" toDir="target/sqoop-1.99.6-bin-hadoop200/server/webapps"/>
+  <copy file="../tomcat/target/sqoop-tomcat-1.99.6.jar" toDir="target/sqoop-1.99.6-bin-hadoop200/server/lib"/>
+  <copy todir="target/sqoop-1.99.6-bin-hadoop200/shell/lib">
+    <fileset dir="../shell/target/lib">
+      <include name="*.jar"/>
+      <exclude name="junit-*.jar"/>
+      <exclude name="mockito-*.jar"/>
+    </fileset>
+  </copy>
+  <copy file="../shell/target/sqoop-shell-1.99.6.jar" toDir="target/sqoop-1.99.6-bin-hadoop200/shell/lib"/>
+  <copy todir="target/sqoop-1.99.6-bin-hadoop200/bin">
+    <fileset dir="src/main/bin"/>
+  </copy>
+  <chmod dir="target/sqoop-1.99.6-bin-hadoop200/bin" perm="u+x" includes="*"/>
+  <tar compression="gzip" destfile="target/sqoop-1.99.6-bin-hadoop200.tar.gz">
+    <tarfileset filemode="755" dir="target/sqoop-1.99.6-bin-hadoop200" prefix="sqoop-1.99.6-bin-hadoop200">
+      <include name="**/*.sh"/>
+      <include name="bin/sqoop2-*"/>
+    </tarfileset>
+    <tarfileset dir="target/sqoop-1.99.6-bin-hadoop200" prefix="sqoop-1.99.6-bin-hadoop200">
+      <include name="**/*"/>
+      <exclude name="bin/sqoop2-*"/>
+      <exclude name="**/*.sh"/>
+    </tarfileset>
+  </tar>
+</target>
+</project>

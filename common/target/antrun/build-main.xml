@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <mkdir dir="/home/sergey/code/sqoop-1.99.6-bin-hadoop200/common/target/generated-sources/java"/>
+  <exec executable="sh">
+    <arg line="&apos;/home/sergey/code/sqoop-1.99.6-bin-hadoop200/common/src/saveVersion.sh&apos; 1.99.6 &apos;/home/sergey/code/sqoop-1.99.6-bin-hadoop200/common/target/generated-sources/java&apos;"/>
+  </exec>
+</target>
+</project>
